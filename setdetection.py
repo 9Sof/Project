@@ -4,6 +4,7 @@ import numpy as np
 def nothing(x):
     pass
 cap = cv2.VideoCapture(0)
+
 cv2.namedWindow("Trackbars")
 cv2.createTrackbar("Low-H", "Trackbars", 0, 179, nothing)
 cv2.createTrackbar("Low-S", "Trackbars", 0, 255, nothing)
@@ -11,6 +12,7 @@ cv2.createTrackbar("Low-V", "Trackbars", 0, 255, nothing)
 cv2.createTrackbar("Up-H", "Trackbars", 179, 179, nothing)
 cv2.createTrackbar("Up-S", "Trackbars", 255, 255, nothing)
 cv2.createTrackbar("Up-V", "Trackbars", 255, 255, nothing)
+
 while True:
     _, frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -30,7 +32,7 @@ while True:
     cv2.imshow("mask", mask)
     cv2.imshow("result", result)
     key = cv2.waitKey(1)
-    if key == 27:
+    if key == ord("q"):
         break
 cap.release()
 cv2.destroyAllWindows()

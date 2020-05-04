@@ -5,17 +5,18 @@ import numpy as np
 
 def nothing(x):
     pass
-#Box
+#Boxq
 cv2.namedWindow("Set-Ball") #H สี, S ความอิ่มตัวของสี, V ความเข้มแสง
-cv2.createTrackbar("L - H", "Set-Ball", 10, 179, nothing)
-cv2.createTrackbar("L - S", "Set-Ball", 80, 255, nothing)
-cv2.createTrackbar("L - V", "Set-Ball", 230, 255, nothing)
-cv2.createTrackbar("U - H", "Set-Ball", 30, 179, nothing)
-cv2.createTrackbar("U - S", "Set-Ball", 255, 255, nothing)
-cv2.createTrackbar("U - V", "Set-Ball", 255, 255, nothing)
+cv2.createTrackbar("L - H", "Set-Ball",20, 255, nothing)
+cv2.createTrackbar("L - S", "Set-Ball", 0, 255, nothing)
+cv2.createTrackbar("L - V", "Set-Ball", 0, 255, nothing)
+cv2.createTrackbar("U - H", "Set-Ball", 200, 255, nothing)
+cv2.createTrackbar("U - S", "Set-Ball", 240, 255, nothing)
+cv2.createTrackbar("U - V", "Set-Ball", 240, 255, nothing)
 
-cap = cv2.VideoCapture(1)
-cap1 = cv2.VideoCapture(2)
+
+
+cap = cv2.VideoCapture('PingpongCrop2.mp4')
 
 scoreA = 0
 scoreB = 0
@@ -128,53 +129,36 @@ def BallDetect2(frame):
     return center
 while True:
     ret1, frame1 = cap.read()
-    ret2, frame2 = cap1.read()
     ret1, free1 = cap.read()
-    ret2, free2 = cap1.read()
 
 #Detect
     ball1 = BallDetect(frame1)
-    ball2 = BallDetect(frame2)
 
     
 
 #Text
-    free1 = cv2.line(free1,(120,164),(3,423),(0,0,255),5)
-    free1 = cv2.line(free1,(120,164),(431,168),(0,0,255),5)
-    free1 = cv2.line(free1,(3,423),(528,428),(0,0,255),5)
-    free1 = cv2.line(free1,(425,120),(570,425),(0,0,255),5)
+    frame1 = cv2.line(frame1,(200,95),(10,410),(0,0,255),5) #center
+    frame1 = cv2.line(frame1,(212,710),(1645,740),(0,0,255),8) #bottom
+    frame1 = cv2.line(frame1,(212,710),(490,565),(0,0,255),8) #left
+    frame1 = cv2.line(frame1,(1645,740),(1483,578),(0,0,255),8) #right
 
-    free2 = cv2.line(free2,(200,95),(10,410),(0,0,255),5) #center
-    free2 = cv2.line(free2,(200,145),(545,140),(0,0,255),5) #top
-    free2 = cv2.line(free2,(55,410),(630,425),(0,0,255),5) #bottom
-    free2 = cv2.line(free2,(545,140),(630,425),(0,0,255),5) #right
 
     frame1 = cv2.putText(frame1,"A",(40,50),
         cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
-    frame2 = cv2.putText(frame2,"B",(600,50),
-        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
     frame1 = cv2.putText(frame1,(str(scoreA)+":"+str(scoreB)),(280,50),
         cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
-    frame2 = cv2.putText(frame2,(str(scoreA)+":"+str(scoreB)),(280,50),
-        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
+
 
     cv2.imwrite('frame1.png',frame1)
-    cv2.imwrite('frame2.png',frame2)
 
 #Show
     free1 = imutils.resize(free1, width=420)
-    free2 = imutils.resize(free2, width=420)
     ball1 = imutils.resize(ball1, width=420)
-    ball2 = imutils.resize(ball2, width=420)
     frame1 = imutils.resize(frame1, width=420)
-    frame2 = imutils.resize(frame2, width=420)
 
     cv2.imshow("Free-1", free1)
-    cv2.imshow("Free-2", free2)
     cv2.imshow("Ball-1", ball1)
-    cv2.imshow("Ball-2", ball2)
     cv2.imshow("Frame-1", frame1)
-    cv2.imshow("Frame-2", frame2)
     
     
     key = cv2.waitKey(1) & 0xFF
