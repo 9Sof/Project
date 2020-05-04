@@ -6,12 +6,12 @@ def nothing(x):
     pass
 #Box
 cv2.namedWindow("Set-Ball") #H สี, S ความอิ่มตัวของสี, V ความเข้มแสง
-cv2.createTrackbar("L - H", "Set-Ball", 10, 179, nothing)
-cv2.createTrackbar("L - S", "Set-Ball", 80, 255, nothing)
-cv2.createTrackbar("L - V", "Set-Ball", 230, 255, nothing)
-cv2.createTrackbar("U - H", "Set-Ball", 30, 179, nothing)
-cv2.createTrackbar("U - S", "Set-Ball", 255, 255, nothing)
-cv2.createTrackbar("U - V", "Set-Ball", 255, 255, nothing)
+cv2.createTrackbar("L - H", "Set-Ball",130, 255, nothing)
+cv2.createTrackbar("L - S", "Set-Ball", 60, 255, nothing)
+cv2.createTrackbar("L - V", "Set-Ball", 130, 255, nothing)
+cv2.createTrackbar("U - H", "Set-Ball", 170, 255, nothing)
+cv2.createTrackbar("U - S", "Set-Ball", 180, 255, nothing)
+cv2.createTrackbar("U - V", "Set-Ball", 200, 255, nothing)
 
 img = cv2.imread('frame1.png')
 
@@ -50,7 +50,7 @@ while (1):
             cv2.circle(img, center, 3, (0, 0, 255), -1)
 
 
-    img = cv2.line(img,(200,95),(10,410),(0,0,255),5) #center
+    # img = cv2.line(img,(200,95),(10,410),(0,0,255),5) #center
     img = cv2.line(img,(212,710),(1645,740),(0,0,255),8) #bottom
     img = cv2.line(img,(212,710),(490,565),(0,0,255),8) #left
     img = cv2.line(img,(1645,740),(1483,578),(0,0,255),8) #right
