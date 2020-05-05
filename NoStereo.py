@@ -54,8 +54,8 @@ while True:
 #ball tracking
 
     frame = imutils.resize(frame, width=420)
-    cv2.imshow('0',frame)
-    k = cv2.waitKey(1)    
+    cv2.imshow('score',frame)
+    k = cv2.waitKey(125)    
     j = 30
 
     cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
@@ -75,34 +75,36 @@ while True:
             cv2.circle(frame, center, 3, (0, 0, 255), -1)
 ###################################
 #score
-        if center:
-            while j>=10:
-                ret, frame = cap.read()
+        if scoreA != 5 and scoreB != 5 :
+            if center:
+                while j>=10:
+                    ret, frame = cap.read()
+                    frame = imutils.resize(frame, width=420)
+                    cv2.imshow('Ball in the game',frame)
+                    if j%10 == 0:
+                        font = cv2.FONT_HERSHEY_SIMPLEX
+                        cv2.putText(frame,str(j//10),(250,250), font, 7,(255,255,255),10,cv2.LINE_AA)
+                    frame = imutils.resize(frame, width=420)
+                    cv2.imshow('Countdown',frame)
+                    cv2.waitKey(125)
+                    j = j-1
+                else:
+                    ret, frame = cap.read()
+                
+                    if center < (100,0) and center < (100,480) : 
+                        scoreA += 1
 
-                if j%10 == 0:
-                    font = cv2.FONT_HERSHEY_SIMPLEX
-                    cv2.putText(frame,str(j//10),(250,250), font, 7,(255,255,255),10,cv2.LINE_AA)
-                frame = imutils.resize(frame, width=420)
-                cv2.imshow('1',frame)
-                cv2.waitKey(125)
-                j = j-1
-            else:
-                ret, frame = cap.read()
-               
-                if center < (100,0) and center < (100,480) : 
-                    scoreA += 1
-
-                elif center > (540,0) and center > (540,480) : 
-                    scoreB += 1
-                frame = imutils.resize(frame, width=420)
-                cv2.imshow('set',frame)
+                    elif center > (540,0) and center > (540,480) : 
+                        scoreB += 1
+                    frame = imutils.resize(frame, width=420)
+                    cv2.imshow('set',frame)
+        else:
+            scoreA = 0
+            scoreB = 0  
 
 ########################################
 #Show
-    res = imutils.resize(res, width=420)
-    frame = imutils.resize(frame, width=420)
-    
-    cv2.imshow("Score",frame)
+    res = imutils.resize(res, width=420)  
     cv2.imshow("Ball",res)
 
 
