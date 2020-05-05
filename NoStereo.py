@@ -2,14 +2,15 @@ import cv2
 import imutils
 import time
 import numpy as np
+import threading
 
 #CreateBox
 def nothing(x):
     pass
 cv2.namedWindow("Set-Color")
 cv2.createTrackbar("Low-H", "Set-Color", 10, 179, nothing)
-cv2.createTrackbar("Low-S", "Set-Color", 170, 255, nothing)
-cv2.createTrackbar("Low-V", "Set-Color", 195, 255, nothing)
+cv2.createTrackbar("Low-S", "Set-Color", 80, 255, nothing)
+cv2.createTrackbar("Low-V", "Set-Color", 160, 255, nothing)
 cv2.createTrackbar("Up-H", "Set-Color", 30, 179, nothing)
 cv2.createTrackbar("Up-S", "Set-Color", 255, 255, nothing)
 cv2.createTrackbar("Up-V", "Set-Color", 255, 255, nothing)
@@ -17,8 +18,26 @@ cv2.createTrackbar("Up-V", "Set-Color", 255, 255, nothing)
 scoreA = 0
 scoreB = 0
 
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(1)
 #cap2 = cv2.VideoCapture(2)
+
+def set_interval(func, sec):
+    def func_wrapper():
+        set_interval(func, sec)
+        func()
+    t = threading.Timer(sec, func_wrapper)
+    t.start()
+    return t
+
+def count_scoreA(center):
+        if center < (100,0) and center < (100,480) : 
+            scoreA = 0
+            scoreA += 1
+
+def count_scoreB(center):
+        if center > (540,0) and center > (540,480) : 
+            scoreB = 0
+            scoreB += 1
 
 while True:
     ret, frame = cap.read()
@@ -67,39 +86,23 @@ while True:
             cv2.circle(frame, (int(x), int(y)), int(radius),
                 (0, 255, 255), 2)
             cv2.circle(frame, center, 3, (0, 0, 255), -1)
- 
-        if center < (100,0) and center < (100,480) : 
-            scoreA += 1
 
-        elif center > (540,0) and center > (540,480) : 
-            scoreB += 1
+        scoreA = set_interval(count_scoreA(center), 3)
+        scoreB = set_interval(count_scoreB(center), 3)
 
-########################################################
-#Table
-    kernel_size = 5
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size), 0)
 
-    edges = cv2.Canny(blur_gray, 75, 150)
-    lines = cv2.HoughLinesP(edges, 1, np.pi/180, 50, maxLineGap=100)
 
-    for line in lines:
-        x1, y1, x2, y2 = line[0]
-        cv2.line(frame, (x1, y1), (x2, y2), (0, 255,0), 2)
-    
 ########################################
 #Show
     frame = imutils.resize(frame, width=420)
     mask = imutils.resize(mask, width=420)
     res = imutils.resize(res, width=420)
     frameL = imutils.resize(frameL, width=420)
-    edges = imutils.resize(edges, width=420)
 
     cv2.imshow("Score",frameL)
     cv2.imshow("Frame",frame)
     cv2.imshow("Ball",mask)
     cv2.imshow("Res",res)
-    cv2.imshow("Table", edges)
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
