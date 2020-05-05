@@ -2,7 +2,6 @@ import cv2
 import imutils
 import time
 import numpy as np
-import threading
 
 #CreateBox
 def nothing(x):
@@ -20,24 +19,6 @@ scoreB = 0
 
 cap = cv2.VideoCapture(1)
 #cap2 = cv2.VideoCapture(2)
-
-def set_interval(func, sec):
-    def func_wrapper():
-        set_interval(func, sec)
-        func()
-    t = threading.Timer(sec, func_wrapper)
-    t.start()
-    return t
-
-def count_scoreA(center):
-        if center < (100,0) and center < (100,480) : 
-            scoreA = 0
-            scoreA += 1
-
-def count_scoreB(center):
-        if center > (540,0) and center > (540,480) : 
-            scoreB = 0
-            scoreB += 1
 
 while True:
     ret, frame = cap.read()
@@ -58,19 +39,25 @@ while True:
     mask = cv2.dilate(mask, None, iterations=2)
     res = cv2.bitwise_and(frame,frame, mask= mask)
 
-    frameL = cv2.line(frameL,(100,0),(100,480),(0,0,255),5)
-    frameL = cv2.line(frameL,(540,0),(540,480),(0,0,255),5)
+    frame = cv2.line(frame,(100,0),(100,480),(0,0,255),5)
+    frame = cv2.line(frame,(540,0),(540,480),(0,0,255),5)
 
 ###################################
 #Text
-    frameL = cv2.putText(frameL,"A",(40,50),
+    frame = cv2.putText(frame,"A",(40,50),
         cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
-    frameL = cv2.putText(frameL,"B",(600,50),
+    frame = cv2.putText(frame,"B",(600,50),
         cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
-    frameL = cv2.putText(frameL,(str(scoreA)+":"+str(scoreB)),(280,50),
+    frame = cv2.putText(frame,(str(scoreA)+":"+str(scoreB)),(280,50),
         cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
 ###################################
-#Score
+#ball tracking
+
+    frame = imutils.resize(frame, width=420)
+    cv2.imshow('0',frame)
+    k = cv2.waitKey(1)    
+    j = 30
+
     cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
@@ -86,26 +73,40 @@ while True:
             cv2.circle(frame, (int(x), int(y)), int(radius),
                 (0, 255, 255), 2)
             cv2.circle(frame, center, 3, (0, 0, 255), -1)
+###################################
+#score
+        if center:
+            while j>=10:
+                ret, frame = cap.read()
 
-        scoreA = set_interval(count_scoreA(center), 3)
-        scoreB = set_interval(count_scoreB(center), 3)
+                if j%10 == 0:
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    cv2.putText(frame,str(j//10),(250,250), font, 7,(255,255,255),10,cv2.LINE_AA)
+                frame = imutils.resize(frame, width=420)
+                cv2.imshow('1',frame)
+                cv2.waitKey(125)
+                j = j-1
+            else:
+                ret, frame = cap.read()
+               
+                if center < (100,0) and center < (100,480) : 
+                    scoreA += 1
 
-
+                elif center > (540,0) and center > (540,480) : 
+                    scoreB += 1
+                frame = imutils.resize(frame, width=420)
+                cv2.imshow('set',frame)
 
 ########################################
 #Show
-    frame = imutils.resize(frame, width=420)
-    mask = imutils.resize(mask, width=420)
     res = imutils.resize(res, width=420)
-    frameL = imutils.resize(frameL, width=420)
+    frame = imutils.resize(frame, width=420)
+    
+    cv2.imshow("Score",frame)
+    cv2.imshow("Ball",res)
 
-    cv2.imshow("Score",frameL)
-    cv2.imshow("Frame",frame)
-    cv2.imshow("Ball",mask)
-    cv2.imshow("Res",res)
 
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
+    if k == ord("q"):
 	    break
 
 cap.release()  

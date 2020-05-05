@@ -7,10 +7,10 @@ import numpy as np
 def nothing(x):
     pass
 cv2.namedWindow("Set-Color")
-cv2.createTrackbar("Low-H", "Set-Color", 0, 179, nothing)
-cv2.createTrackbar("Low-S", "Set-Color", 0, 255, nothing)
-cv2.createTrackbar("Low-V", "Set-Color", 0, 255, nothing)
-cv2.createTrackbar("Up-H", "Set-Color", 179, 179, nothing)
+cv2.createTrackbar("Low-H", "Set-Color", 10, 179, nothing)
+cv2.createTrackbar("Low-S", "Set-Color", 80, 255, nothing)
+cv2.createTrackbar("Low-V", "Set-Color", 160, 255, nothing)
+cv2.createTrackbar("Up-H", "Set-Color", 30, 179, nothing)
 cv2.createTrackbar("Up-S", "Set-Color", 255, 255, nothing)
 cv2.createTrackbar("Up-V", "Set-Color", 255, 255, nothing)
 
