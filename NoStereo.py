@@ -7,22 +7,22 @@ import numpy as np
 def nothing(x):
     pass
 cv2.namedWindow("Set-Color")
-cv2.createTrackbar("Low-H", "Set-Color", 10, 179, nothing)
+cv2.createTrackbar("Low-H", "Set-Color", 20, 179, nothing)
 cv2.createTrackbar("Low-S", "Set-Color", 80, 255, nothing)
-cv2.createTrackbar("Low-V", "Set-Color", 160, 255, nothing)
+cv2.createTrackbar("Low-V", "Set-Color", 180, 255, nothing)
 cv2.createTrackbar("Up-H", "Set-Color", 30, 179, nothing)
 cv2.createTrackbar("Up-S", "Set-Color", 255, 255, nothing)
-cv2.createTrackbar("Up-V", "Set-Color", 255, 255, nothing)
+cv2.createTrackbar("Up-V", "Set-Color", 255, 255, nothing
+)
 
 scoreA = 0
 scoreB = 0
 
 cap = cv2.VideoCapture(1)
-#cap2 = cv2.VideoCapture(2)
 
 while True:
     ret, frame = cap.read()
-    ret, frameL = cap.read()
+    ret, freeframe = cap.read()
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     l_h = cv2.getTrackbarPos("Low-H", "Set-Color")
@@ -39,22 +39,8 @@ while True:
     mask = cv2.dilate(mask, None, iterations=2)
     res = cv2.bitwise_and(frame,frame, mask= mask)
 
-    frame = cv2.line(frame,(100,0),(100,480),(0,0,255),5)
-    frame = cv2.line(frame,(540,0),(540,480),(0,0,255),5)
-
-###################################
-#Text
-    frame = cv2.putText(frame,"A",(40,50),
-        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
-    frame = cv2.putText(frame,"B",(600,50),
-        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
-    frame = cv2.putText(frame,(str(scoreA)+":"+str(scoreB)),(280,50),
-        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
 ###################################
 #ball tracking
-
-    frame = imutils.resize(frame, width=420)
-    cv2.imshow('score',frame)
     k = cv2.waitKey(125)    
     j = 30
 
@@ -79,6 +65,18 @@ while True:
             if center:
                 while j>=10:
                     ret, frame = cap.read()
+###################################
+#Text
+                    frame = cv2.putText(frame,"A",(40,50),
+                        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
+                    frame = cv2.putText(frame,"B",(600,50),
+                        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
+                    frame = cv2.putText(frame,(str(scoreA)+":"+str(scoreB)),(280,50),
+                        cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),3)
+
+                    frame = cv2.line(frame,(100,100),(100,380),(0,0,255),5)
+                    frame = cv2.line(frame,(540,0),(540,480),(0,0,255),5)
+
                     frame = imutils.resize(frame, width=420)
                     cv2.imshow('Ball in the game',frame)
                     if j%10 == 0:
@@ -89,15 +87,12 @@ while True:
                     cv2.waitKey(125)
                     j = j-1
                 else:
-                    ret, frame = cap.read()
-                
-                    if center < (100,0) and center < (100,480) : 
+                    if center < (100,100) and center < (100,380) : 
                         scoreA += 1
 
                     elif center > (540,0) and center > (540,480) : 
                         scoreB += 1
-                    frame = imutils.resize(frame, width=420)
-                    cv2.imshow('set',frame)
+                    
         else:
             scoreA = 0
             scoreB = 0  
@@ -105,6 +100,8 @@ while True:
 ########################################
 #Show
     res = imutils.resize(res, width=420)  
+    freeframe = imutils.resize(freeframe, width=420)
+    cv2.imshow('freeframe',freeframe)
     cv2.imshow("Ball",res)
 
 
