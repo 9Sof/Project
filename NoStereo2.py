@@ -74,7 +74,10 @@ while True:
             scoreA += 1
         elif center[0] < 340 and center[1] > 380: 
             scoreA += 1
-            
+        
+        elif center[0] > 100 and center[0] < 540 and center[1] < 380:
+            print('Feild')
+            print(center[0],' : ',center[1])
         elif center[0] > 540: 
             scoreB += 1
         elif center[0] > 340 and center[1] > 380: 
