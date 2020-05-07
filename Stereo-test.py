@@ -11,12 +11,12 @@ cv2.createTrackbar("L - H", "Set-Ball",130, 255, nothing)
 cv2.createTrackbar("L - S", "Set-Ball", 60, 255, nothing)
 cv2.createTrackbar("L - V", "Set-Ball", 130, 255, nothing)
 cv2.createTrackbar("U - H", "Set-Ball", 170, 255, nothing)
-cv2.createTrackbar("U - S", "Set-Ball", 180, 255, nothing)
-cv2.createTrackbar("U - V", "Set-Ball", 200, 255, nothing)
+cv2.createTrackbar("U - S", "Set-Ball", 225, 255, nothing)
+cv2.createTrackbar("U - V", "Set-Ball", 225, 255, nothing)
 
 
 
-cap = cv2.VideoCapture('PingpongCrop.mp4')
+cap = cv2.VideoCapture('PingpongCrop2_1.mp4')
 
 scoreA = 0
 scoreB = 0

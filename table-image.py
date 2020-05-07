@@ -50,7 +50,7 @@ while (1):
             cv2.circle(img, center, 3, (0, 0, 255), -1)
 
 
-    # img = cv2.line(img,(200,95),(10,410),(0,0,255),5) #center
+    img = cv2.line(img,(700,1080),(990,570),(0,0,255),5) #center
     img = cv2.line(img,(212,710),(1645,740),(0,0,255),8) #bottom
     img = cv2.line(img,(212,710),(490,565),(0,0,255),8) #left
     img = cv2.line(img,(1645,740),(1483,578),(0,0,255),8) #right
